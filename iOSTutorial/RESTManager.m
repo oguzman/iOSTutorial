@@ -8,7 +8,7 @@
 
 #import "RESTManager.h"
 
-#define TESTING_URL @"" //todo: define
+#define TESTING_URL @""
 #define SERVER_URL @"http://jemiza.herokuapp.com/admin/"
 
 @implementation RESTManager
@@ -20,16 +20,16 @@
     if(![method isEqual: @"GET"])
     {
         if(testing)
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",TESTING_URL, service]];
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",SERVER_URL, service]];
         else
             url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", SERVER_URL, service]];
     }
     else
     {
         if(testing)
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@.json", TESTING_URL, service]];
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@.json", SERVER_URL, service]];
         else
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@.json?access_token=%@", SERVER_URL, service, accessToken]];
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@.json?access_token=%@", SERVER_URL, service, accessToken]];
     }
     
     request = [NSMutableURLRequest requestWithURL:url];
