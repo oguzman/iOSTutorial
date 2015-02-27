@@ -13,12 +13,15 @@
 @end
 
 @implementation LoginViewController
-@synthesize txtPass, txtUser, progressHud;
+@synthesize txtPass, txtUser, progressHud, btnLogin, isEmailValid, isUserValid;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     [self setTitle:@"Acceso"];
+    txtPass.delegate = self;
+    [txtUser setDelegate:self];
+    [btnLogin setEnabled:NO];
     //_progressHud
     //self.progressHud
     progressHud = [JGProgressHUD progressHUDWithStyle:(JGProgressHUDStyleDark)];
@@ -59,14 +62,44 @@
     }];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+-(void)doValidateInputs:(id)sender
+{
+    if ([txtUser.text length] > 3)
+        isUserValid = YES;
+    else
+        isUserValid = NO;
+    if([txtPass.text length] > 3)
+        isEmailValid = YES;
+    else
+        isEmailValid = NO;
+    if(isEmailValid && isUserValid)
+        [btnLogin setEnabled:YES];
+    else
+        [btnLogin setEnabled:NO];
 }
-*/
+
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    if(textField.tag == 0)
+    {
+        if ([textField.text length] > 3)
+            isUserValid = YES;
+        else
+            isUserValid = NO;
+    }
+    else if(textField.tag == 1)
+    {
+        if([textField.text length] > 3)
+            isEmailValid = YES;
+        else
+            isEmailValid = NO;
+    }
+    if(isEmailValid && isUserValid)
+        [btnLogin setEnabled:YES];
+    else
+        [btnLogin setEnabled:NO];
+    return YES;
+}
+
 
 @end
