@@ -15,7 +15,7 @@
 @implementation MainViewController
 @synthesize tblProducts;
 @synthesize arrProducts;
-@synthesize token;
+@synthesize productDetailViewController;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -24,16 +24,20 @@
     [tblProducts setDelegate:self];
     [tblProducts setDataSource:self];
     [self doCallProductsService];
+    //todo: add loader
 }
 
 -(void)doCallProductsService
 {
+    //here
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
     arrProducts = [[NSMutableArray alloc] init];
     [RESTManager sendData:nil toService:@"products" withMethod:@"GET" isTesting:NO withAccessToken:[[defaults objectForKey:@"userInfo"] objectForKey:@"access_token"] toCallBack:^(id result){
         arrProducts = result;
         [tblProducts reloadData];
+        //todo: remove loader
     }];
+    //NOOOOOO, pq. se salio del hilo (bloque)
 }
 
 - (void)didReceiveMemoryWarning {
@@ -61,10 +65,47 @@
     }
     NSMutableDictionary * dictProduct = [arrProducts objectAtIndex:indexPath.row];
     [[cell textLabel] setTextColor:[UIColor colorWithRed:95.0f/255.0 green:95.0f/255.0 blue:95.0f/255 alpha:1.0f]];
-    cell.textLabel.text = @"Producto...";
-    [cell setAccessoryType:UITableViewCellAccessoryNone];
+    cell.textLabel.text = [dictProduct objectForKey:@"description"];
+    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-
     return cell;
 }
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSMutableDictionary * dictProduct = [arrProducts objectAtIndex:indexPath.row];
+    productDetailViewController = [[ProductDetailViewController alloc] init];
+    productDetailViewController.dictProduct = dictProduct;
+    [self.navigationController pushViewController:productDetailViewController animated:YES];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @end
